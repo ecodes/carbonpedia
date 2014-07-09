@@ -1,0 +1,136 @@
+/* Empty. Add your own CSS if you like */
+
+/* Principal */
+
+.col-type{
+	border-width: thick;
+	border-style: solid; /* solid */
+    border-color: white;
+	position:relative;
+}
+
+.col-type-0{
+	background-color: #878787; /* http://roble.pntic.mec.es/apuente/grises.html http://arteyciencianet.blogspot.com.es/2011/07/tonos-de-gris-colores-html-y-rgb.html #8a6de9 */ /* #666666 #878787 #AFAFAF #C0C0C0 #D3D3D3 */
+}
+
+.col-type-1{
+	background-color: #AFAFAF; /* #4a87ee */
+}
+
+.col-type-2{
+	background-color: #C0C0C0; /* #66cc33 */ 
+}
+
+.scroll-type{
+  height: 100% !important;
+  display: -webkit-box !important;
+  display: -moz-box !important;
+  display: -ms-flexbox !important;
+  display: -webkit-flex !important;
+  display: flex !important;
+  -webkit-box-direction: normal !important;
+  -moz-box-direction: normal !important;
+  -webkit-box-orient: vertical !important;
+  -moz-box-orient: vertical !important;
+  -webkit-flex-direction: column !important;
+  -ms-flex-direction: column !important;
+  flex-direction: column !important;
+
+}
+
+.row-type-total2{
+  -webkit-flex: 0 1 100% !important;
+  -ms-flex: 0 1 100% !important;
+  flex: 0 1 100% !important;
+}
+
+.row-type-total{
+  -webkit-flex: 0 1 50% !important;
+  -ms-flex: 0 1 50% !important;
+  flex: 0 1 50% !important;
+}
+
+.row-type{
+  height: 100% !important;
+  -webkit-box-flex: 0 !important;
+  -moz-box-flex: 0 !important;
+  position:relative;
+}
+
+.img-type{
+	display: inline-block;
+	max-height: 100%;
+    max-width: 35%; 
+	vertical-align:middle;
+	z-index: 1;
+	position:absolute;
+    margin-left: 5%;
+	margin-right: 60%;
+	top: 0; 
+	left: 0; 
+	bottom: 0; 
+	right: 0;
+	margin-top: auto;
+    margin-bottom: auto;
+}
+
+.container {
+    height: 100%;
+    font: 0/0 a;         /* remove the gap between inline(-block) elements */
+}
+
+.container:before {    /* create a full-height inline block pseudo=element */
+    content: ' ';
+    display: inline-block;
+    vertical-align: middle;  /* vertical alignment of the inline element */
+    height: 100%;
+}
+
+.write_type{
+	display: inline-block;
+    vertical-align: middle;  /* vertical alignment of the inline element */
+	margin-left: 48%;
+	color: #ae0001; /* #f8f8f8 */ /* Color carbonpedia ae0001 */
+}
+
+/* Buscador */
+
+.button-carbonpedia{
+	background-color: #ae0001 !important;
+}
+
+/* Mapa */
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.scroll {
+  height: 100%;
+}
+
+/* Buscador en el mapa */
+
+.checkbox.checkbox-assertive input:before, .checkbox.checkbox-assertive .checkbox-icon:before {
+border-color: #ae0001 !important; }
+.checkbox.checkbox-assertive input:checked:before, .checkbox.checkbox-assertive input:checked + .checkbox-icon:before {
+background: #ae0001 !important; }
+
+/* Gráficas*/
+
+.title_graphic{
+ 	text-align: center;
+}
+
+.text_graphic{
+	/* margin-left: 20%; */
+	text-align: center;
+}	
+
+/* Pruebas */
+
+.icon-carbonpedia{
+	color: #ae0001 !important;
+	height: 100% !important;
+}

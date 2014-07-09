@@ -1,0 +1,28 @@
+<!--
+  This template loads for the 'tab.friend-detail' state (app.js)
+  'firend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
+  The FriendsCtrl pulls data from the Friends service (service.js)
+  The Friends service returns an array of friend data
+-->
+<ion-view title="{{detail.title}}">
+  <ion-content has-header="true" padding="true">
+	<div class="list list-inset">
+		<div class="item item-text-wrap" ng-if="detail[fields['event_product_name']] && detail.isEvent"><b>{{translation.EVENT_PRODUCT_NAME}}:</b> {{detail[fields['event_product_name']]}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['event_product_name']] && detail.isProduct"><b>Nombre del producto:</b> {{detail[fields['event_product_name']]}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['entity_name']] && (detail.isEntity || detail.isProduct)"><b>Nombre de la entidad:</b> {{detail[fields['entity_name']]}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['scope_study']] && detail.isProduct"><b>Alcance del estudio:</b> {{detail[fields['scope_study']]}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['event_type']] && detail.isEvent"><b>Tipo de evento:</b> {{detail[fields['event_type']]}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['year']] && (detail.isEntity || detail.isEvent)"><b>Año:</b> {{detail[fields['year']]}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['scope_3_categories_including']] && detail.isEntity"><b>Categorias incluidas de alcance 3:</b> {{detail[fields['scope_3_categories_including']]}}</div>
+		<div class="item item-text-wrap" ng-if="!detail.v1_14_1 && detail.isEntity"><b>Categorias incluidas de alcance 3:</b> Ninguna</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['city']] && detail.isEvent"><b>Localidad donde tiene lugar el evento:</b> {{detail[fields['city']] | mayus}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['country']] && detail.isEvent"><b>País:</b> {{detail[fields['country']] | mayus}}</div>	
+		<div class="item item-text-wrap" ng-if="detail[fields['duration_days_event']] && detail.isEvent"><b>Duracion del evento:</b> {{detail[fields['duration_days_event']]}} días</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['ratio_functional_unit']] && detail.isProduct"><b>Emisiones por unidad funcional:</b> {{detail[fields['ratio_functional_unit']]}}  {{detail[fields['unit_measure']]}}/{{detail[fields['characteristic_unit_entity']]}} </div>
+		<div class="item item-text-wrap" ng-if="detail[fields['total_emissions']] && (detail.isEntity || detail.isEvent)"><b>Emisiones totales:</b> {{detail[fields['total_emissions']]}} {{detail[fields['unit_measure']]}} </div>
+		<div class="item item-text-wrap" ng-if="detail[fields['verified']]!=''"><b>Verificado:</b> {{detail[fields['verified']] | mayus}}</div>
+		<div class="item item-text-wrap" id="information"><b>Más información en:</b> 
+			<a href="#" onclick="window.open( angular.element(document.getElementById('information')).scope().detail.url, '_blank', 'location=yes'); return false;">{{detail.url}}</a>  </div>
+	</div>	
+  </ion-content>
+</ion-view>

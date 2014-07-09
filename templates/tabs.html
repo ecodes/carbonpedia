@@ -1,0 +1,98 @@
+<ion-side-menus>
+
+  <ion-pane ion-side-menu-content>
+    <ion-nav-bar class="bar-stable nav-title-slide-ios7">
+		<ion-nav-back-button class="button-clear">
+			<i class="icon ion-chevron-left"></i> 
+			Volver 
+		</ion-nav-back-button>
+    </ion-nav-bar>
+	<ion-nav-buttons side="right">
+		<button class="button button-icon icon icon-camera icon-carbonpedia" disabled="true"></button>
+	</ion-nav-buttons>
+	<ion-tabs class="tabs-icon-top">
+	  <!-- Main Tab -->
+	  <ion-tab title="Presentación" icon="icon icon-pawn2" href="#/tab/app/main"> <!-- icon-pawn2 ion-ios7-home -->
+		<ion-nav-view name="tab-main"></ion-nav-view>
+	  </ion-tab>
+	  <!-- Listado Tab -->
+	  <ion-tab title="Buscador" icon="icon ion-clipboard" href="#/tab/search">
+		<ion-nav-view name="tab-list"></ion-nav-view>
+	  </ion-tab>
+	  <!-- Mapa Tab -->
+	  <ion-tab title="Mapa" icon="icon ion-earth" href="#/tab/map">
+		<ion-nav-view name="tab-map"></ion-nav-view>
+	  </ion-tab>		  
+	</ion-tabs>
+  </ion-pane>
+
+  <ion-side-menu side="left"  is-enabled="tab!='list'">
+    <header class="bar bar-header bar-stable">
+      <h1 class="title" ng-if="tab=='main'">Menú</h1>
+	  <h1 class="title" ng-if="url=='map'">Selección</h1>
+    </header>
+    <ion-content class="has-header">
+	
+	<ion-list ng-if="tab=='main'">
+		<ion-item nav-clear menu-close href="#/tab/main">
+		  Principal
+		</ion-item>
+		<ion-item nav-clear menu-close href="#/tab/carbonpedia">
+		  Carbonpedia
+		</ion-item>
+		<ion-item nav-clear menu-close href="#/tab/product">
+		  Producto
+		</ion-item>
+		<ion-item nav-clear menu-close href="#/tab/event">
+		  Evento
+		</ion-item>
+		<ion-item nav-clear menu-close href="#/tab/entity">
+		  Entidad
+		</ion-item>
+	</ion-list>
+	
+	<ul class="list" ng-if="url=='map'">
+	  <li class="item item-input item-select">
+		<div class="input-label">
+		  Años
+		</div>
+		<select ng-model="form.myYear" ng-options="year for year in select.years" ng-change="changeForm()">
+	  </li>
+	  
+	  <!-- Sin expliación... no se muestra y si se quita desaparecen otros campos -->
+	  <li class="item item-input item-select">
+		<div class="input-label">
+		  Años
+		</div>
+		<select>
+		  <option>Blue</option>
+		  <option selected>Green</option>
+		  <option>Red</option>
+		</select>
+	  </li>
+	  
+		<div class="item item-divider">
+			Verificada
+		</div>
+		
+	<ion-toggle ng-model="form.verified" toggle-class="toggle-balanced" ng-change="changeForm()">
+		Verificada
+	</ion-toggle>
+	
+	<div class="item item-divider">
+		Tipos de eventos
+	</div>
+	  
+	  <li class="item item-checkbox" ng-repeat="type in types">
+		<i class="{{ icons[type] }}"></i>
+		 <label class="checkbox checkbox-assertive">
+		   <input type="checkbox"  ng-model="form[type]"
+				ng-change="changeForm()">
+		 </label>
+		 {{translation[type]}}
+	  </li>
+  
+	</ul>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

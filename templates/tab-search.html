@@ -1,0 +1,94 @@
+<ion-view title="{{translation.BUSQUEDA}}">
+ 	<ion-nav-buttons side="left">
+		<button  ng-click="clearForm()" class="button button-assertive button-carbonpedia">Limpiar</button>
+	</ion-nav-buttons> 
+	<ion-content has-header="true" padding="true">  
+  
+  
+<!--   <select name="carlist" form="carform" onclick="console.log('select onclick');"
+	onmousedown="console.log('select onmousedown');"
+	onmouseup="console.log('select onmouseup');"
+
+	onfocus="console.log('select onfocus');"
+	onblur="console.log('select onblur');"
+	>
+	 -->
+<!-- 		onmouseover="console.log('select onmouseover');"
+	onmousemove="console.log('select onmousemove');"
+	onmouseout="console.log('select onmouseout');" -->
+	
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="opel">Opel</option>
+  <option value="audi">Audi</option>
+</select> 
+  
+		<form name="searchForm" ng-submit="searchList()">
+		
+			<div class="list">				
+			  <label class="item item-input item-select">
+				<div class="input-label">
+				  Actividad
+				</div>
+				<select ng-model="form.activity" ng-options="activity for activity in activities"
+					ng-focus="functionFocus('activities', 'activity', 'Todas');"
+					ng-blur="functionBlur('activities', 'activity', 'Todas');"					
+				>
+				</select>
+			  </label>
+		
+ 			  <label class="item item-input item-select">
+				<div class="input-label">
+				  Ciudad
+				</div>
+				<select ng-model="form.city" ng-options="city for city in cities"
+					ng-focus="functionFocus('cities', 'city', 'Todas');"
+					ng-blur="functionBlur('cities', 'city', 'Todas');"					
+				>
+				</select>
+			  </label>
+		
+			  <label class="item item-input item-select">
+				<div class="input-label">
+				  Tipo
+				</div>
+				<select ng-model="form.type" ng-options="type as type | even for type in types"
+					ng-focus="functionFocus('types', 'type', 'Todos');"
+					ng-blur="functionBlur('types', 'type', 'Todos');"					
+				>
+				</select>
+			  </label>
+		
+			  <label class="item item-input item-select">
+				<div class="input-label">
+				  {{translation.AGNO}}
+				</div>
+				<select ng-model="form.year" ng-options="year for year in years"
+					ng-focus="functionFocus('years', 'year', 'Todos');"
+					ng-blur="functionBlur('years', 'year', 'Todos');"					
+				>
+					<!-- 
+					ng-mouseout="functionBlur('select2 mouseout');"
+					ng-mouseup="console.log('select2 onmouseup'); myFunction();"> 
+					-->
+				</select>
+			  </label>
+			  
+			<label class="item item-input">
+			  <span class="input-label">Entidad</span>
+			  <input name="input-entity" ng-model="form.entity" type="text">
+			</label>
+	
+			<label class="item item-input">
+			  <span class="input-label">Producto</span>
+			  <input name="input-entity" ng-model="form.product" type="text">
+			</label> 
+			  
+			</div>		
+			
+			<div class="padding">
+				<button class="button button-block button-assertive button-carbonpedia">Buscar</button>
+			</div>
+		</form> 
+	</ion-content>
+</ion-view>

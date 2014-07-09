@@ -1,0 +1,12 @@
+<ion-view title="Evento">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+	<h4 class="title_graphic">Distribución de los eventos según su tipo</h4>
+	<div id="chart_event_type"></div>
+  	<p class="text_graphic" data-ng-repeat="i in [] | range: eventType.length">
+		<i class="icon ion-stop" style="color : {{chartColors[i].color}};"></i> {{eventType[i][0]}}
+ 	</p>
+  </ion-content>
+</ion-view>

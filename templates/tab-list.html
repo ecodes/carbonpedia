@@ -1,0 +1,11 @@
+<ion-view title="Listado">
+  <ion-content class="has-header">
+    <ion-list>
+      <ion-item ng-repeat="element in list" type="item-text-wrap" ng-href="#/tab/detail/{{element[fields['footprint_id']]}}">
+		<span ng-if="element[fields['type_footprint']]=='ENT'">{{element[fields['entity_name']]}} {{element[fields['year']]}}</span>
+		<span ng-if="element[fields['type_footprint']]=='Even'">{{element[fields['event_product_name']]}}</span>
+		<span ng-if="element[fields['type_footprint']]=='Prod'">{{element[fields['event_product_name']]}} {{element[fields['year']]}}</span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

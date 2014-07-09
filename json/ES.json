@@ -1,0 +1,15 @@
+{  
+	"MAIN" : "Principal",
+	"DATABASE_ERROR" : "Problemas al actualizar la Base de datos, se necesita conexión a Internet",
+	"AGNADIDOS" : "Añadidas a Carbonpedia ",
+	"AGNADIDOS2" : " huellas de carbono.",
+	"BUSQUEDA" : "Búsqueda",
+	"AGNO" : "Año",
+	"sportEvents" : "Eventos deportivos",
+	"congress" : "Congresos",
+	"awards" : "Entregas de Premios",
+	"courses" : "Cursos y jornadas",
+	"culturalEvents" : "Eventos culturales",
+	"corporateEvents" : "Eventos corporativos",
+	"EVENT_PRODUCT_NAME" : "Nombre del evento"
+}
