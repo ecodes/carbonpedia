@@ -393,7 +393,7 @@ angular.module('starter.controllers', [])
 			load_events();
 		}
 		change = false;
-	}
+	} 
 	
 	//Marcamos que existen cambios
 	$rootScope.changeForm = function(){
