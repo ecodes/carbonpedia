@@ -11,10 +11,10 @@
 		<div class="item item-text-wrap" ng-if="detail[fields['event_product_name']] && detail.isProduct"><b>Nombre del producto:</b> {{detail[fields['event_product_name']]}}</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['entity_name']] && (detail.isEntity || detail.isProduct)"><b>Nombre de la entidad:</b> {{detail[fields['entity_name']]}}</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['scope_study']] && detail.isProduct"><b>Alcance del estudio:</b> {{detail[fields['scope_study']]}}</div>
-		<div class="item item-text-wrap" ng-if="detail[fields['event_type']] && detail.isEvent"><b>Tipo de evento:</b> {{detail[fields['event_type']]}}</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['event_type']] && detail.isEvent"><b>Tipo de evento:</b> {{detail[fields['event_type']] | type_even }}</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['year']] && (detail.isEntity || detail.isEvent)"><b>Año:</b> {{detail[fields['year']]}}</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['scope_3_categories_including']] && detail.isEntity"><b>Categorias incluidas de alcance 3:</b> {{detail[fields['scope_3_categories_including']]}}</div>
-		<div class="item item-text-wrap" ng-if="!detail.v1_14_1 && detail.isEntity"><b>Categorias incluidas de alcance 3:</b> Ninguna</div>
+		<div class="item item-text-wrap" ng-if="!detail[fields['scope_3_categories_including']] && detail.isEntity"><b>Categorias incluidas de alcance 3:</b> Ninguna</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['city']] && detail.isEvent"><b>Localidad donde tiene lugar el evento:</b> {{detail[fields['city']] | mayus}}</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['country']] && detail.isEvent"><b>País:</b> {{detail[fields['country']] | mayus}}</div>	
 		<div class="item item-text-wrap" ng-if="detail[fields['duration_days_event']] && detail.isEvent"><b>Duracion del evento:</b> {{detail[fields['duration_days_event']]}} días</div>

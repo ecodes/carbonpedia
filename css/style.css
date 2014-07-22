@@ -1,12 +1,25 @@
-/* Empty. Add your own CSS if you like */
 
 /* Principal */
 
 .col-type{
 	border-width: thick;
-	border-style: solid; /* solid */
+	border-style: solid;
     border-color: white;
-	position:relative;
+	position:relative;	
+}
+
+ .a-type{
+	text-decoration: none !important;	
+	vertical-align:middle;
+	top: 0; 
+	left: 0; 
+	bottom: 0; 
+	right: 0;
+	margin-top: auto;
+    margin-bottom: auto;
+	min-height: 100%; 
+	max-height: 100%;
+	height: 100%;
 }
 
 .col-type-0{
@@ -35,26 +48,14 @@
   -webkit-flex-direction: column !important;
   -ms-flex-direction: column !important;
   flex-direction: column !important;
-
-}
-
-.row-type-total2{
-  -webkit-flex: 0 1 100% !important;
-  -ms-flex: 0 1 100% !important;
-  flex: 0 1 100% !important;
-}
-
-.row-type-total{
-  -webkit-flex: 0 1 50% !important;
-  -ms-flex: 0 1 50% !important;
-  flex: 0 1 50% !important;
 }
 
 .row-type{
-  height: 100% !important;
-  -webkit-box-flex: 0 !important;
-  -moz-box-flex: 0 !important;
-  position:relative;
+	-webkit-box-flex: 0 !important;
+	-moz-box-flex: 0 !important;
+	-webkit-flex: 0 1 100%  !important;
+	-ms-flex: 0 1 100% !important;
+	flex: 0 1 100% !important;  
 }
 
 .img-type{
@@ -87,7 +88,7 @@
 }
 
 .write_type{
-	display: inline-block;
+	display: inline; /* inline-block inline */
     vertical-align: middle;  /* vertical alignment of the inline element */
 	margin-left: 48%;
 	color: #ae0001; /* #f8f8f8 */ /* Color carbonpedia ae0001 */
@@ -119,16 +120,21 @@ background: #ae0001 !important; }
 
 /* Gráficas*/
 
-.title_graphic{
+/* .title_graphic{
  	text-align: center;
-}
+} */
 
 .text_graphic{
 	/* margin-left: 20%; */
 	text-align: center;
 }	
 
-/* Pruebas */
+.draw_graphic{
+ 	/* margin-top: -60px !important;
+    margin-bottom: -60px !important; */
+}
+
+/* Iconos */
 
 .icon-carbonpedia{
 	color: #ae0001 !important;

@@ -2,11 +2,14 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <ion-content class="has-header">
-	<h4 class="title_graphic">Distribución de los eventos según su tipo</h4>
+  <ion-content class="has-header"> 
+	<h4> Tipos de eventos que comunican su huella en Carbonpedia. </h4>
 	<div id="chart_event_type"></div>
   	<p class="text_graphic" data-ng-repeat="i in [] | range: eventType.length">
 		<i class="icon ion-stop" style="color : {{chartColors[i].color}};"></i> {{eventType[i][0]}}
  	</p>
+	<br/>
+	<h4> También los puedes ver situados en el mapa de eventos. </h4>
+	<br/>
   </ion-content>
 </ion-view>

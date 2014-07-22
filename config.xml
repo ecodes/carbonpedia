@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="es.ecodes.carbonpedia.app" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
-
+<widget id="es.ecodes.carbonpedia.app" version="0.0.4" xmlns="http://www.w3.org/ns/widgets" 
+	xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0" 
+>
+	<!-- xmlns:android="http://schemas.android.com/apk/res/android" -->
+	
     <name>Carbonpedia</name>
     <description>
          Carbonpedia  es una base de datos abierta sobre huella de carbono tanto de entidades, como de productos y eventos, centrada en el ámbito español. 
@@ -38,8 +41,9 @@
     -->
     <preference name="permissions" value="none"/>
 	
-	<!-- <preference name="phonegap-version" value="3.4.0" /> -->
-	 
+	<!-- No abrir desde 0 la aplicación cada vez que se pulsa el icono -->
+<!-- 	<preference name="android:launchMode" value="singleInstance" /> -->
+
 	<!-- compilar para android e ios -->
 	<gap:platform name="android" />
 	<gap:platform name="ios" />
@@ -47,20 +51,20 @@
 	<gap:plugin name="org.apache.cordova.inappbrowser" />
 	<!-- <access origin="*" browserOnly="true"/> --> 
 	 
-	<icon src="img/res/drawable/icon_carbonpedia.png" />
-	<icon src="img/res/drawable-ldpi/icon_carbonpedia.png" gap:platform="android" gap:density="ldpi" />
-	<icon src="img/res/drawable-mdpi/icon_carbonpedia.png" gap:platform="android" gap:density="mdpi" />
-	<icon src="img/res/drawable-hdpi/icon_carbonpedia.png" gap:platform="android" gap:density="hdpi" />
-	<icon src="img/res/drawable-xhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xhdpi" />
-	<icon src="img/res/drawable-xxhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xxhdpi" />
+	<icon src="www/img/res/drawable/icon_carbonpedia.png" />
+	<icon src="www/img/res/drawable-ldpi/icon_carbonpedia.png" gap:platform="android" gap:density="ldpi" />
+	<icon src="www/img/res/drawable-mdpi/icon_carbonpedia.png" gap:platform="android" gap:density="mdpi" />
+	<icon src="www/img/res/drawable-hdpi/icon_carbonpedia.png" gap:platform="android" gap:density="hdpi" />
+	<icon src="www/img/res/drawable-xhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xhdpi" />
+	<icon src="www/img/res/drawable-xxhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xxhdpi" />
 
-	<gap:splash src="img/res/drawable/splashimage.9.png" />
-	<gap:splash src="img/res/drawable/splashimage.9.png" gap:platform="android" />
-	<gap:splash src="img/res/drawable/splashimage.9.png" gap:platform="android" gap:density="ldpi" />
-	<gap:splash src="img/res/drawable/splashimage.9.png" gap:platform="android" gap:density="mdpi" />
-	<gap:splash src="img/res/drawable/splashimage.9.png" gap:platform="android" gap:density="hdpi" />
-	<gap:splash src="img/res/drawable/splashimage.9.png" gap:platform="android" gap:density="xhdpi" />
-	<gap:splash src="img/res/drawable/splashimage.9.png" gap:platform="android" gap:density="xxhdpi" />
+	<gap:splash src="www/img/res/drawable/splashimage.9.png" /> 
+	<!-- <gap:splash src="www/img/res/drawable/splashimage.9.png" gap:platform="android" /> -->
+	<gap:splash src="www/img/res/drawable-ldpi/splashimage.9.png" gap:platform="android" gap:density="ldpi" />
+	<gap:splash src="www/img/res/drawable-mdpi/splashimage.9.png" gap:platform="android" gap:density="mdpi" />
+	<gap:splash src="www/img/res/drawable-hdpi/splashimage.9.png" gap:platform="android" gap:density="hdpi" />
+	<gap:splash src="www/img/res/drawable-xhdpi/splashimage.9.png" gap:platform="android" gap:density="xhdpi" />
+	<gap:splash src="www/img/res/drawable-xxhdpi/splashimage.9.png" gap:platform="android" gap:density="xxhdpi" />
 
 	<!-- iPhone and iPod touch -->
 	<gap:splash src="www/img/iphone_splash/center_splashimage.png" gap:platform="ios" width="320" height="480" />
@@ -100,9 +104,9 @@
 	
 	<preference name="loglevel" value="VERBOSE" />
 	
-	<!-- <feature name="debug-server" required="true">
+<!--  	<feature name="debug-server" required="true">
       <param name="domain" value="CARBONPEDIA-PC.ecodes.com"/>
       <param name="key" value="carbonpedia01"/>
-    </feature> -->
+    </feature>  -->
 	
 </widget>

@@ -1,0 +1,9 @@
+<ion-view title="{{title}}">
+  <ion-content class="has-header">
+    <ion-list>
+      <ion-item ng-repeat="element in list" type="item-text-wrap" ng-click='updateForm("{{element}}")'>
+  		<span>{{element}}</span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

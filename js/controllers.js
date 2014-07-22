@@ -10,7 +10,7 @@ angular.module('starter.controllers', [])
 			List.orderedList(DBFields.fields['type_footprint'])
 				.then(function(results) {
 					$scope.type = $filter('dataToChartData')(results, 'even');
-					
+					 
 					//% de eventos de cada tipo
 					var total = $scope.type[0][1] + $scope.type[1][1] + $scope.type[2][1];
 					$scope.type[0][1] =  100 * $scope.type[0][1] / total ; //Math.round(
@@ -30,32 +30,36 @@ angular.module('starter.controllers', [])
 			console.log($scope.translation.DATABASE_ERROR);
 			alert($scope.translation.DATABASE_ERROR);
         });
+		
+		$scope.click = function(type){
+			$state.transitionTo("tab." + $scope.type[type][3]);
+		}
+		
 })
 
 .controller('CarbonpediaCtrl', function($scope, $rootScope, $filter, $ionicPopup, Support, List, DBFields, ChartColors) {
 	$rootScope.url = 'carbonpedia';
 	$rootScope.tab = 'main';
+	$scope.chartColors = ChartColors;
+	$scope.supportsSvg = Support.supportsSvg;
 	
-	if(Support.supportsSvg){ //si el navegador soporta imágenes vectoriales
-		List.orderedList(DBFields.fields['verified'])
-			.then(function(results) {
-				$scope.verified=results;
-				drawChartVerified();
-			}, function(results) {
-				//Problemas
-				console.log("List.all error");
-			});
-		
-		List.orderedList(DBFields.fields['type_footprint'])
-			.then(function(results) {
-				$scope.type=results;
-				drawChartType();
-			}, function(results) {
-				//Problemas
-				console.log("List.all error");
-			});
-	}
-	List.maxTotal()
+	List.orderedList(DBFields.fields['verified'])
+		.then(function(results) {
+			drawChartVerified(results);
+		}, function(results) {
+			//Problemas
+			console.log("List.all error");
+		});
+	
+	List.orderedList(DBFields.fields['type_footprint'])
+		.then(function(results) {
+			drawChartType(results);
+		}, function(results) {
+			//Problemas
+			console.log("List.all error");
+		});
+			
+	List.maxTotal()	
 		.then(function(results) {
 			$scope.total = results[0].total;					
 		}, function(results) {
@@ -63,30 +67,35 @@ angular.module('starter.controllers', [])
 			console.log("List.all error");
 		});	
 	
-	//Dibujamos gráfica de huellas berificadas y no verificadas
-	function drawChartVerified(){
-		results=$scope.verified;
+	//Dibujamos gráfica de huellas verificadas y no verificadas
+	function drawChartVerified(results){
+		if(!$scope.verified){
+			$scope.verified=$filter('dataToChartData')(results, 'mayus');
+		}
+		// $scope.verifiedTitle= 'Huellas verificadas frente a no verificadas';
 		var options = {
-			title: 'Huellas verificadas frente a no verificadas',
-			enableInteractivity: false,
+			// title: $scope.verifiedTitle,
 			slices: ChartColors
 		};
-		 $filter('drawChart')($filter('dataToChartData')(results, 'mayus'), options, 
-			 'chart_verified', 'pie');	
+		 $filter('drawChart')($scope.verified, options, 
+			 'chart_verified', 'pie', Support.supportsSvg);	
 	}
 	
 	//Dibujamos gráfica de huellas por tipos
-	function drawChartType(){
-		results=$scope.type;
+	function drawChartType(results){
+		if(!$scope.type){
+			$scope.type=$filter('dataToChartData')(results, 'even');
+		}
+		// $scope.typeTitle = 'Distribución de los registros por tipo de huella';
 		var options = {
-			title: 'Distribución de los registros por tipo de huella',
+			// title: $scope.typeTitle,
 			legend: { position: 'none' },
 			colors: [ChartColors[0].color],
-			enableInteractivity: false
+			slices: ChartColors,
 		};
-		$filter('drawChart')($filter('dataToChartData')(results, 'even'), 
+		$filter('drawChart')($scope.type, 
 			options, 
-			'chart_type', 'bar', 'Huellas');	
+			'chart_type', 'bar', Support.supportsSvg, 'Huellas');
 	}
 	
 	//Dibujamos todas las gráficas
@@ -106,30 +115,26 @@ angular.module('starter.controllers', [])
 	//Dibujamos gráfica de tipos de evento
 	function drawChartEvenType(results){
 		if(!$scope.eventType){
-			$scope.eventType = $filter('dataToChartData')(results);
+			$scope.eventType = $filter('dataToChartData')(results, 'type_even');
 		}
 		var options = {
 			title: 'Distribución de los eventos según su tipo',
-			enableInteractivity: false,
 			legend: 'none',
 			chartArea: {  width: "100%", height: "100%" },
 			slices: ChartColors
 		};
 		$filter('drawChart')($scope.eventType, 
 			options, 
-			'chart_event_type', 'pie');	
+			'chart_event_type', 'pie', Support.supportsSvg);	
 	}
 	
-	if(Support.supportsSvg){
-		List.orderedList(DBFields.fields['event_type'], 'Even')
-			.then(function(results) {
-				// $scope.eventType=results;
-				drawChartEvenType(results);
-			}, function(results) {
-				//Problemas
-				console.log("List.all error");
-			});
-	}
+	List.orderedList(DBFields.fields['event_type'], 'Even')
+		.then(function(results) {
+			drawChartEvenType(results);
+		}, function(results) {
+			//Problemas
+			console.log("List.all error");
+		});
 	
 	window.addEventListener("orientationchange", drawChartEvenType, true);	 
 	
@@ -147,26 +152,22 @@ angular.module('starter.controllers', [])
 		}
 		var options = {
 			title: 'Metodología utilizada en el cálculo de las huellas de carbono',
-			enableInteractivity: false,
 			legend: 'none',
 			chartArea: {  width: "100%", height: "100%" },
 			slices: ChartColors
 		};
 		$filter('drawChart')($scope.methodology, 
 			options, 
-			'chart_methodology', 'pie');	
+			'chart_methodology', 'pie', Support.supportsSvg);	
 	}
 	
-	if(Support.supportsSvg){
-		List.orderedList(DBFields.fields['methodology'], 'ENT')
-			.then(function(results) {
-				// $scope.methodology=results;
-				drawChartMethodology(results);
-			}, function(results) {
-				//Problemas
-				console.log("List.all error");
-			});
-	}
+	List.orderedList(DBFields.fields['methodology'], 'ENT')
+		.then(function(results) {
+			drawChartMethodology(results);
+		}, function(results) {
+			//Problemas
+			console.log("List.all error");
+		});
 	
 	window.addEventListener("orientationchange", drawChartMethodology, true);	 
 	
@@ -184,26 +185,22 @@ angular.module('starter.controllers', [])
 		}
 		var options = {
 			title: 'Distribución por sectores de las huellas de carbono',
-			enableInteractivity: false,
 			legend: 'none',
 			chartArea: {  width: "100%", height: "100%" },
 			slices: ChartColors
 		};
 		$filter('drawChart')($scope.sector, 
 			options, 
-			'chart_sector', 'pie');	
+			'chart_sector', 'pie', Support.supportsSvg);	
 	}
 	
-	if(Support.supportsSvg){
-		List.orderedList(DBFields.fields['activity_sector'], 'Prod')
-			.then(function(results) {
-				// $scope.sector=results;
-				drawChartSector(results);
-			}, function(results) {
-				//Problemas
-				console.log("List.all error");
-			});
-	}
+	List.orderedList(DBFields.fields['activity_sector'], 'Prod')
+		.then(function(results) {
+			drawChartSector(results);
+		}, function(results) {
+			//Problemas
+			console.log("List.all error");
+		});
 	
 	window.addEventListener("orientationchange", drawChartSector, true);	 
 	
@@ -212,47 +209,45 @@ angular.module('starter.controllers', [])
 .controller('SearchCtrl', function($state, $scope, $rootScope, $rootScope, Support, $ionicPopup, List, DBFields) {
 
 	$rootScope.url = 'search';
-	$rootScope.tab = 'list';
+	$rootScope.tab = 'list';	
+	  
+	//Solo en webkit se muestran bien los select
+	if (Support.webkit){
+		$scope.okSelect = 'select';
+	}else{
+		$scope.okSelect = 'no-select';
+	}
 	
 	//Cambiamos '' por 'Todos' en el select, si procede
-	$scope.functionFocus = function(names, name, text){		
-		if( $scope[names][0]=='' ){
-			// console.log(name + " functionFocus: " + text + " //" + $scope[names][0] + "// ");
-			$scope[names][0]=text;
-			if($scope.form[name]==''){
-				$scope.form[name]=text;
-			}
+	$scope.functionFocus = function(names, name, text){
+		if(oldVersion(window)){
+			functionOldFocus($state, 'formSearch', name, text);
+		}else{
+			functionFocus($scope, null, names, $rootScope, 'formSearch', name, text);
 		}
 	}
 	
 	//Cambiamos 'Todos' por '' en el select, si procede
-	$scope.functionBlur = function(names, name, text){		
-		if( $scope[names][0]==text && $scope.form[name]==text){
-			// console.log(name + " functionBlur: " + text + " //" + $scope[names][0]  + "// ");
-			$scope[names][0]='';
-			$scope.form[name]='';
-		}
+	$scope.functionBlur = function(names, name, text){
+		functionBlur($scope, null, names, $rootScope, 'formSearch', name, text, $state);
 	}
 	
 	//Limpia el formulario
 	$scope.clearForm = function(){
-		delete $rootScope.form;		
+		delete $rootScope.formSearch;		
 		loadForm();		
 	}
 	
 	//Carga datos en el formulario
 	function loadForm(){
 		$scope.form = {};
-		
+		if( !$rootScope.formSearch ){
+			$rootScope.formSearch = {};
+		}
 		dataSelect('years', 'year', DBFields.fields['year']);
 		dataSelect('cities', 'city', DBFields.fields['city']);
 		dataSelect('types', 'type', DBFields.fields['type_footprint']);
 		dataSelect('activities', 'activity', DBFields.fields['activity_sector']);
-		
-		if($rootScope.form){
-			$scope.form['entity'] = $rootScope.form['entity'];
-			$scope.form['product'] = $rootScope.form['product'];
-		}
 	}
 	
 	//Pasamos los valores devueltos por la BD al $scope
@@ -265,12 +260,14 @@ angular.module('starter.controllers', [])
 			//Añadimo un primer valor vacío si no existe
 			if( $scope[names][0]!='' ){
 				$scope[names].unshift('');
+			}else{ //Eliminamos exceso de campos nulos
+				while( $scope[names][1]=='' ){
+					$scope[names].shift();
+				}
 			}
 			//Cargamos el valor seleccionado previamente, si existe
-			if( !$rootScope.form || !$rootScope.form[name] ){
-				$scope.form[name] = $scope[names][0];
-			}else{
-				$scope.form[name] = $rootScope.form[name];
+			if( !$rootScope.formSearch || !$rootScope.formSearch[name] ){
+				$rootScope.formSearch[name] = $scope[names][0];
 			}
 			
 		}, function(results) {
@@ -281,8 +278,8 @@ angular.module('starter.controllers', [])
 
 	//Si el dato en nulo, le ponemos el valor cadena vacía
 	function dataNull(name){
-		if(!$scope.form[name]){
-			$scope.form[name] = '';
+		if(!$rootScope.formSearch[name] || $rootScope.formSearch[name]=='Todos' || $rootScope.formSearch[name]=='Todas'){
+			$rootScope.formSearch[name] = '';
 		}
 	}	
 
@@ -298,19 +295,82 @@ angular.module('starter.controllers', [])
 		dataNull('type');
 		dataNull('activity');
 		
- 		if(!$scope.form.entity){
-			$scope.form.entity = '';
+ 		if(!$rootScope.formSearch.entity){
+			$rootScope.formSearch.entity = '';
 		}
-		if(!$scope.form.product){
-			$scope.form.product = '';
+		if(!$rootScope.formSearch.product){
+			$rootScope.formSearch.product = '';
 		}
-		$rootScope.form = $scope.form;
 		
 		//Montamos la URL del listado que mostrará el resultado de la búsqueda
-		$state.transitionTo("tab.list", { "entity": encodeURIComponent($scope.form.entity), "product": encodeURIComponent($scope.form.product), 
-			"city": encodeURIComponent($scope.form.city), "type": encodeURIComponent($scope.form.type), "year": encodeURIComponent($scope.form.year), "activity": encodeURIComponent($scope.form.activity) });
+		$state.transitionTo("tab.list", { "entity": encodeURIComponent($rootScope.formSearch.entity), 
+											"product": encodeURIComponent($rootScope.formSearch.product), 
+											"city": encodeURIComponent($rootScope.formSearch.city), 
+											"type": encodeURIComponent($rootScope.formSearch.type), 
+											"year": encodeURIComponent($rootScope.formSearch.year), 
+											"activity": encodeURIComponent($rootScope.formSearch.activity) });
 	}
 	
+})
+
+//Sustituye a los select en versiones antiguas de Android
+.controller('SelectListCtrl', function( $scope, $rootScope, $stateParams, 
+							$filter, $ionicNavBarDelegate, $ionicScrollDelegate, 
+							$ionicSideMenuDelegate, List, DBFields) {
+	$rootScope.url = 'select-list';
+	$rootScope.tab = 'list';
+	
+	if ($stateParams.variable!=''){nameDB = decodeURIComponent($stateParams.variable)};
+	if ($stateParams.form!=''){form = decodeURIComponent($stateParams.form)};
+	if ($stateParams.text!=''){text = decodeURIComponent($stateParams.text)};
+	// console.log("nameDB " + nameDB);
+	name=nameDB;
+	//Los nombres usados no coincidían con los de BD
+	if ('type_footprint'.indexOf(name)>=0) {
+		name='type_footprint';
+	}
+	if ('activity_sector'.indexOf(name)>=0) {
+		name='activity_sector';
+	}
+	var condition=0;
+	var value=0;
+	//Hemos llegado desde el mapa
+	if ('myYear'.indexOf(name)>=0) {
+		name='year';
+		$rootScope.map_menu=true;
+		condition=DBFields.fields['type_footprint'];
+		value='Even';
+		//Recogemso el menú lateral
+		$ionicSideMenuDelegate.toggleLeft();
+	}
+	
+	$scope.updateForm = function(value){
+		if (name=='type_footprint') {
+			value = $filter('even')(value);		}
+		
+		if(value==text){
+			value='';
+		}		
+		$rootScope[form][nameDB] = value;
+		$ionicNavBarDelegate.back(); //Volver a la pantalla anterior
+	}
+	
+	List.listing(DBFields.fields[name], condition, value).then(function(results) {
+		$scope.list=[];
+		for (i=0;i<results.length;i++){
+			$scope.list[i] = results[i].value;
+			if (name=='type_footprint') {
+				$scope.list[i] = $filter('even')($scope.list[i]);
+			}
+		}
+		if( $scope.list[0]=='' ){
+			$scope.list[0]=text;
+		}else{
+			$scope.list.unshift(text);
+		}
+		$ionicScrollDelegate.resize();
+	})
+	$scope.title="Seleccionar";	
 })
 
 .controller('ListCtrl', function($scope, $rootScope, $stateParams, $ionicPopup, List, DBFields) {
@@ -326,7 +386,6 @@ angular.module('starter.controllers', [])
 	if ($stateParams.activity!=''){parameter["activity"] = decodeURIComponent($stateParams.activity)};
 	if ($stateParams.entity!=''){parameter["entity"] = decodeURIComponent($stateParams.entity)};
 	if ($stateParams.product!=''){parameter["product"] = decodeURIComponent($stateParams.product)};
-	
  	List.all(parameter)
 		.then(function(results) {
 			$scope.list = results;
@@ -363,8 +422,6 @@ angular.module('starter.controllers', [])
 						$scope.detail.isEntity = true;
 						$scope.detail.title = $scope.detail[DBFields.fields['entity_name']] + " " + $scope.detail[DBFields.fields['year']];
 						break;
-					// default:
-						// return '';
 				}	 
 				 
 				// URL de la huella en Carbonpedia http://www.ecodes.org/carbonpedia/base-de-datos/{{entity_id}}-{{entity_name_alias}}?idhuella={{footprint_id}}
@@ -377,27 +434,40 @@ angular.module('starter.controllers', [])
 			});	
 })
 
-.controller('MapCtrl', function($scope, $rootScope, $http, $filter, $ionicPopup, List, MapStore, DBFields) {
+.controller('MapCtrl', function($scope, $rootScope, $state, $http, $ionicSideMenuDelegate, 
+								$filter, $ionicPopup, Support, List, MapStore, DBFields) {
 
 	$rootScope.url = 'map';
 	$rootScope.tab = 'map';
 	
-	var change = false; 
+	//Solo en webkit se muestran bien los select
+	if (Support.webkit){
+		$rootScope.okSelect = 'select';
+	}else{
+		$rootScope.okSelect = 'no-select';
+	}
+	
+	//Cambiamos '' por 'Todos' en el select, si procede
+	$rootScope.functionFocus = function(names, name, text, preNames){	
+		if(oldVersion(window)){
+			functionOldFocus($state, 'form', name, text);
+		}else{
+			functionFocus($rootScope, preNames, names, $rootScope, 'form', name, text);
+		}
+	}
+	
+	//Cambiamos 'Todos' por '' en el select, si procede
+	$rootScope.functionBlur = function(names, name, text, preNames){		
+		functionBlur($rootScope, preNames, names, $rootScope, 'form', name, text);
+	}
+	
 	$rootScope.form = MapStore.form;
 	$rootScope.types = MapStore.types;
 	$rootScope.icons = MapStore.icons;
 	
-	//Si hay cambios, hacemos nueva búsqueda al recoger el panel lateral
-	$scope.toggleLeftSideMenu = function(){
-		if(change){
-			load_events();
-		}
-		change = false;
-	} 
-	
 	//Marcamos que existen cambios
 	$rootScope.changeForm = function(){
-		change = true;
+		load_events();
 	}
 	
 	// create a map in the "map" div, set the view to a given place and zoom
@@ -426,7 +496,10 @@ angular.module('starter.controllers', [])
 	MapStore.firstTime = false;
 	
 	//Creamos el grupo al que pertenecen todos los layers
-	var layerGroup = L.layerGroup();
+	var layerGroup = new L.MarkerClusterGroup({
+		 maxClusterRadius: 30,
+		 spiderfyDistanceMultiplier: 2
+	}); //L.layerGroup();
 	layerGroup.addTo(map);
 	
 	//Marcamos la posición del usuario
@@ -459,84 +532,62 @@ angular.module('starter.controllers', [])
 		//Elegimos el icono a utilizar
 		var icon; 				
 		switch(type) {
-			case "Eventos deportivos":
+			case "deportivo": //deportivo "Eventos deportivos"
 				if(verified){
 					icon = new LeafIcon({iconUrl:  'img/map_icon/sport_verified.png'});
 				}else{
 					icon = new LeafIcon({iconUrl:  'img/map_icon/sport_no_verified.png'});
 				}
 				break;
-			case "Congresos":
+			case "congresos": //congresos "Congresos"
 				if(verified){
 					icon = new LeafIcon({iconUrl:  'img/map_icon/congress_verified.png'});
 				}else{
 					icon = new LeafIcon({iconUrl:  'img/map_icon/congress_no_verified.png'});
 				}
 				break;
-			case "Entregas de Premios":
+			case "premios": //premios "Entregas de Premios"
 				if(verified){
 					icon = new LeafIcon({iconUrl:  'img/map_icon/award_verified.png'});
 				}else{
 					icon = new LeafIcon({iconUrl:  'img/map_icon/award_no_verified.png'});
 				}
 				break;
-			case "Cursos y jornadas":
+			case "corporativos": //corporativos "Eventos corporativos"
 				if(verified){
-					icon = new LeafIcon({iconUrl:  'img/map_icon/course_verified.png'});
+					icon = new LeafIcon({iconUrl:  'img/map_icon/corporate_verified.png'});
 				}else{
-					icon = new LeafIcon({iconUrl:  'img/map_icon/course_no_verified.png'});
+					icon = new LeafIcon({iconUrl:  'img/map_icon/corporate_no_verified.png'});
 				}
-				break;	
-			case "Eventos culturales":
+				break;
+			case "culturales": //culturales "Eventos culturales"
 				if(verified){
 					icon = new LeafIcon({iconUrl:  'img/map_icon/culture_verified.png'});
 				}else{
 					icon = new LeafIcon({iconUrl:  'img/map_icon/culture_no_verified.png'});
 				}
 				break;	
-			default: // "Eventos corporativos"
+			default: // "Cursos y jornadas" cursos		
 				if(verified){
-					icon = new LeafIcon({iconUrl:  'img/map_icon/corporate_verified.png'});
+					icon = new LeafIcon({iconUrl:  'img/map_icon/course_verified.png'});
 				}else{
-					icon = new LeafIcon({iconUrl:  'img/map_icon/corporate_no_verified.png'});
+					icon = new LeafIcon({iconUrl:  'img/map_icon/course_no_verified.png'});
 				}
-				
-				if(type!="Eventos corporativos"){
-					console.log("Tipo invalido " + type);
+				if(type!="cursos"){
+					console.log("Tipo invalido /" + type + "/");
 				}
 		} 
 
 		var marker = L.marker([lat, lon], {icon: icon})
 			.bindPopup(popup);							
 		layerGroup.addLayer(marker);		
-	}
-		
-	//Encontramos la posión de una huella y la dibujamos	
-   function getPosition(qry, popup, layerGroup, verified, type) {   
-   		//URL pedir coordenadas a Open Street Map
-        var parameters = L.Util.extend({
-            q: qry,
-            format: 'json'
-        }, {limit: 1});
-		var api = 'http://nominatim.openstreetmap.org/search';
-		var url = api + L.Util.getParamString(parameters);
-		
-		$http.get(url)
-			.success(function(data, status, headers, config) {
-				 if(data[0] && data[0].lat){
-					drawPoint(data[0].lat, data[0].lon, verified, popup, layerGroup, type);
-				 }
-			})
-			.error(function(data, status, headers, config) {
-				  console.log('Error "getPosition"');
-			});        
-    }
+	}		
 	
 	//Mostrar eventos en el mapa
 	$scope.points = [];
 	
 	//Cargamos los años elegibles en el desplegable del formulario
-	List.listing(DBFields.fields['year']).then(function(results) {
+	List.listing(DBFields.fields['year'], DBFields.fields['type_footprint'], 'Even').then(function(results) {
 		$rootScope.select = [];
 		$rootScope.select.years=[];
 		for (i=0;i<results.length;i++){
@@ -560,7 +611,6 @@ angular.module('starter.controllers', [])
 		List.map($rootScope.form)
 			.then(function(results) {
 				$scope.points = results; 
-				var popup = null;
 				for (var i in $scope.points) {
 					var city = null;
 					var country = null;
@@ -581,35 +631,10 @@ angular.module('starter.controllers', [])
 					
 					//ya tenemos situado el punto
 					if($scope.points[i][DBFields.fields['lat']] && $scope.points[i][DBFields.fields['lng']]){
-						drawPoint($scope.points[i][DBFields.fields['lat']], $scope.points[i][DBFields.fields['lng']], 
-							verified, newPopup, layerGroup, $scope.points[i][DBFields.fields['event_type']]);
-					}else{
-						//tenemos datos como para localizar el punto
-						if($scope.points[i][DBFields.fields['city']] && $scope.points[i][DBFields.fields['city']]!="Varias Localidades"){
-							city = $scope.points[i][DBFields.fields['city']];
-							if($scope.points[i][DBFields.fields['country']]){
-								country = $scope.points[i][DBFields.fields['country']];
-							}else{
-								country = 'España';
-							}
-							
-							//Si estará en la mismas coordenadas que el punto anterior, unimos el texto
-							// if($scope.points[i-1] && 
-									// $scope.points[i][DBFields.fields['city']] == $scope.points[i-1][DBFields.fields['city']] && 
-									// $scope.points[i][DBFields.fields['country']] == $scope.points[i-1][DBFields.fields['country']]){
-								// popup = popup + '<br/>' +  newPopup;
-							// }else{
-								popup = newPopup;
-							// }
-							
-							//Si estará en las mismas coordendas que el punto siguiente, no dibujamos, por ahora
-							// if(!$scope.points[i+1] || 
-									// $scope.points[i][DBFields.fields['city']] != $scope.points[i+1][DBFields.fields['city']] || 
-									// $scope.points[i][DBFields.fields['country']] != $scope.points[i+1][DBFields.fields['country']] || 
-									// $scope.points[i][DBFields.fields['address']] != $scope.points[i+1][DBFields.fields['address']]){
-								getPosition($scope.points[i][DBFields.fields['address']] + ", " + city + ', ' +  country, popup, layerGroup, verified, $scope.points[i][DBFields.fields['event_type']]);
-							// }
-						}
+						drawPoint($scope.points[i][DBFields.fields['lat']], 
+								$scope.points[i][DBFields.fields['lng']], verified, 
+								newPopup, layerGroup, $scope.points[i][DBFields.fields['event_type']]);			
+
 					}
 				}		
 			}, function(results) {
@@ -618,9 +643,8 @@ angular.module('starter.controllers', [])
 			});
 	}
 	
-	// Comentado para ahorrar peticiones
 	// Cargar huellas en el mapa
-	// load_events();
+	load_events();
 })
 
 ;

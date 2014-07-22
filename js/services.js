@@ -45,7 +45,8 @@ angular.module('starter.services', [])
 //Soporta el navegador imágenes vectoriales o no
 .factory('Support', function($document) {
 	return {
-		supportsSvg: $document[0].implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1")
+		supportsSvg: $document[0].implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1"),
+		webkit: 'WebkitAppearance' in $document[0].documentElement.style
 	}
 })
 
@@ -72,9 +73,9 @@ angular.module('starter.services', [])
 			db.returnMaxTotalIdDB();	
 			return db.deferred.promise;
 		},
-		listing: function(type) {
+		listing: function(type, condition, value) {
 			var db = new Database($http, $q, $rootScope, $ionicPopup);
-			db.returnListingDB(type);
+			db.returnListingDB(type, condition, value);
 			return db.deferred.promise;
 		},
 		map: function(data) {
@@ -95,11 +96,11 @@ angular.module('starter.services', [])
 //Tomado de http://blog.novanet.no/creating-multilingual-support-using-angularjs/
 .service('translationService', function($http) {
 	this.getTranslation = function($rootScope, language) {
-		var languageFilePath = 'json\\' + language + '.json';
+		var languageFilePath = encodeURI('json/' + language + '.json');
 		var ssid = 'language_' + language;
 		
 		function errorCB_2(data, status, headers, config) {
-			console.log("Error processing SQL");
+			console.log("Error processing translation service");
 		}
 		
         if (sessionStorage) {

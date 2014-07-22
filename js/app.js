@@ -5,7 +5,52 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'phonecatFilters'])
+
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'phonecatFilters'], function($httpProvider) {
+  // Use x-www-form-urlencoded Content-Type
+  $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+ 
+  /**
+   * The workhorse; converts an object to x-www-form-urlencoded serialization.
+   * @param {Object} obj
+   * @return {String}
+   */
+  var param = function(obj) {
+    var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
+      
+    for(name in obj) {
+      value = obj[name];
+        
+      if(value instanceof Array) {
+        for(i=0; i<value.length; ++i) {
+          subValue = value[i];
+          fullSubName = name + '[' + i + ']';
+          innerObj = {};
+          innerObj[fullSubName] = subValue;
+          query += param(innerObj) + '&';
+        }
+      }
+      else if(value instanceof Object) {
+        for(subName in value) {
+          subValue = value[subName];
+          fullSubName = name + '[' + subName + ']';
+          innerObj = {};
+          innerObj[fullSubName] = subValue;
+          query += param(innerObj) + '&';
+        }
+      }
+      else if(value !== undefined && value !== null)
+        query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
+    }
+      
+    return query.length ? query.substr(0, query.length - 1) : query;
+  };
+ 
+  // Override $http service's default transformRequest
+  $httpProvider.defaults.transformRequest = [function(data) {
+    return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
+  }];
+})
 
 .run(function($ionicPlatform, $rootScope, List, translationService) {
   $ionicPlatform.ready(function() {
@@ -99,6 +144,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     })
 	
+    .state('tab.select-list', {
+      url: '/select-list/:variable/:form/:text',
+      views: {
+        'tab-list': {
+          templateUrl: 'templates/tab-select-list.html',
+          controller: 'SelectListCtrl'
+        }
+      }
+    })
+	
     .state('tab.detail', {
       url: '/detail/:detailId',
       views: {
@@ -135,6 +190,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         'tab-map': {
           templateUrl: 'templates/detail.html',
           controller: 'DetailCtrl'
+        }
+      }
+    })
+	
+    .state('tab.select-list_map', {
+      url: '/select-list/:variable/:form/:text',
+      views: {
+        'tab-map': {
+          templateUrl: 'templates/tab-select-list.html',
+          controller: 'SelectListCtrl'
         }
       }
     })

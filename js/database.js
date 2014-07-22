@@ -2,6 +2,10 @@
 * Objeto que interactua con la BD
 */
 
+//La api no está disponible y usamos directamente la BD
+//caso especial al meter la web en el dominio...
+var no_api = false;
+
 //Campos de la BD (nombre de los campos)
 var publicFields = {'footprint_id': 'footprint_id', 
 	'entity_id': 'entity_id', 'type_footprint': 'type_footprint', 'year': 'year', 
@@ -14,11 +18,35 @@ var publicFields = {'footprint_id': 'footprint_id',
 	'entity_name_alias': 'entity_name_alias', 'entity_name': 'entity_name', 
 	'activity_sector': 'activity_sector', 'lat': 'lat', 'lng': 'lng', 
 	'event_type': 'event_type', 'address': 'address'};
-		
+
 var Database = function (http, q, scope, ionicPopup) {
 
-	var dbSize = 300 * 1024; //500 * 1024 bytes
-
+	var db;
+	var dbSize = 300 * 1024; // bytes
+	
+	var table = 'huellas';
+	var introFields = publicFields;
+	
+	var noApiWhere = " h.Estado=1 ";
+	
+	if(no_api){ 
+		//Tablas sobre las que se actua si usamos la BD original de Carbonpedia
+		table = 'huellas h inner join cp_contact_details c on c.id = h.v1_2';
+		//Nombre de los campos si usamos la BD original de Carbonpedia
+		introFields = {'footprint_id': 'h.id', 
+			'entity_id': 'c.id', 'type_footprint': 'h.v1_1', 'year': 'h.v1_10', 
+			'city': 'h.v1_8_7', 'country': 'h.v1_8_8',  'methodology': 'h.v1_11_1', 
+			'unit_measure': 'h.v1_12', 'characteristic_unit_entity': 'h.v1_13_1', 
+			'scope_3_categories_including': 'h.v1_14_1', 'scope_study': 'h.v1_14_2', 
+			'duration_days_event': 'h.v1_16_3', 'total_emissions': 'h.v1_18', 
+			'ratio_functional_unit': 'h.v1_20_1', 'ratio_day_event': 'h.v1_21_7', 
+			'event_product_name': 'h.v1_4_2', 'verified': 'h.v1_27', 'entity_name_alias': 'c.alias', 'entity_name': 'c.name', 
+			'activity_sector': 'c.sortname2', 'lat': 'h.lat', 'lng': 'h.lng', 
+			'event_type': 'h.tipo_evento', 'address': 'h.tipo_direccion'};
+	}else{
+		db = window.openDatabase("carbonpedia", "1.0", "Carbonpedia DB", dbSize);
+	}
+	
 	//Escribir en consola y pantalla
 	function console_write(texts){
 		alert(texts);
@@ -29,56 +57,55 @@ var Database = function (http, q, scope, ionicPopup) {
 	this.deferred = q.defer();	
 	var deferred = this.deferred;
 	
-	var db = window.openDatabase("carbonpedia", "1.0", "Carbonpedia DB", dbSize);
+	//Lanzamos una función en transaction si tenemos la BD en local
+	function launchFunctionSQL(launchFunction, parameter1, parameter2, parameter3){
+		if(!no_api){ 
+			db.transaction(
+				function(tx) {
+					 launchFunction(tx, parameter1, parameter2, parameter3);
+				}, errorCB);
+		}else{
+			launchFunction(null, parameter1, parameter2, parameter3);
+		}
+	}
 	
 	//Eventos públicos que son llamados desde los service
 	this.returnAllDB = function(parameter) {
-		db.transaction(
-			function(tx) {
-				 allDB(parameter, tx);
-			}, errorCB);
+		launchFunctionSQL(allDB, parameter);	
 	}
 	
 	this.returnTypeDB = function(type, data) {
-		db.transaction(
-			function(tx) {
-				 typeDB(tx, type, data);
-			}, errorCB);
+		launchFunctionSQL(typeDB, type, data);		
 	}	
 	
 	this.returnIdhuellaDB = function(detailId) {
-		db.transaction(
-			function(tx) {
-				idhuellaDB(detailId, tx);
-			}, errorCB);
+		launchFunctionSQL(idhuellaDB, detailId);		
 	}	
 	
 	this.returnOrderedListDB = function(parameter, type) {
-		db.transaction(
-			function(tx) {
-				orderedListDB(tx, parameter, type);
-			}, errorCB);
+		launchFunctionSQL(orderedListDB, parameter, type);
 	}
 	
-	this.returnListingDB = function(type) {
-		db.transaction(
-			function(tx) {
-				listingDB(type, tx);
-			}, errorCB);
+	this.returnListingDB = function(type, condition, value) {
+		launchFunctionSQL(listingDB, type, condition, value);
 	}
 	
 	this.returnMaxTotalIdDB = function() {
-		db.transaction(
-			function(tx) {
-				maxFootprintDB(tx);
-			}, errorCB);
+		launchFunctionSQL(maxFootprintDB);
 	}
 	
 	this.returnCreateDB = function(detailId) {
 		var week = 7*24*60*60*1000;
 		var now = new Date().getTime();
 		var time = parseInt(window.localStorage.getItem("time"));
-		 if (!time || (time+week) < now){
+		var networkState=true;
+		if(navigator.connection){
+			networkState = navigator.connection.type;
+			networkState = (networkState != Connection.NONE);
+			// alert(networkState + " " + navigator.connection.type);
+		}
+		
+		 if ((!time || (time+week) < now) && !no_api && networkState){
 			var db = window.openDatabase("carbonpedia", "1.0", "Carbonpedia DB", dbSize);
 			window.localStorage.removeItem("time");
 			window.localStorage.removeItem("1");
@@ -88,8 +115,7 @@ var Database = function (http, q, scope, ionicPopup) {
 		 }else{
 			deferred.resolve();
 		 }
-	}
-	
+	}	
 		
 /* 		 	Todos los campos del API
 		idhuella, identidad, v1_1, v1_2, v1_10, v1_8_7, v1_8_8, v1_11_1, v1_11_2, v1_12, ' + 
@@ -123,8 +149,8 @@ var Database = function (http, q, scope, ionicPopup) {
 	// Se crea la tabla que utilizaremos, se elimina si ya existía
 	function createDB(tx) {	
 		
-		tx.executeSql('DROP TABLE IF EXISTS HUELLA');
-		var sql = 'CREATE TABLE IF NOT EXISTS HUELLA ( ' + publicFields['footprint_id'] + ' integer unique';		
+		tx.executeSql('DROP TABLE IF EXISTS '+ table);
+		var sql = 'CREATE TABLE IF NOT EXISTS ' + table + ' ( ' + publicFields['footprint_id'] + ' integer unique';		
 		for (f in useFields) {
 			sql = sql + ", " + publicFields[useFields[f]];
 		}		
@@ -136,7 +162,7 @@ var Database = function (http, q, scope, ionicPopup) {
 	// Se insertan en la tabla los datos
 	function updateDB(data, tx) {	
 		for (i in data.huellas) {	
-			var sql = 'INSERT INTO HUELLA ( ' + publicFields['footprint_id'];
+			var sql = 'INSERT INTO ' + table + ' ( ' + publicFields['footprint_id'];
 			for (f in useFields) {
 				sql = sql + ", " + publicFields[useFields[f]];
 			}	
@@ -158,52 +184,62 @@ var Database = function (http, q, scope, ionicPopup) {
 				values[values.length] = data.huellas[i][originalFields[useFields[f]]];
 			}
 			
-			tx.executeSql(sql,values);
+			tx.executeSql(sql, values);
 		}
-	}
-	
-	//Se forma una cadena con los campos recibidos separados por comas
-	function addComma(fields){
-		var phrase = "";
-		for (f in fields) {
-			if (phrase!=""){
-				phrase = phrase + ", ";
-			}
-			phrase = phrase + publicFields[fields[f]];
-		}
-		return phrase;
 	}
 	
 	//Se solicita un idhuella
-	function idhuellaDB(idhuella, tx) {
+	function idhuellaDB(tx, idhuella) {
 		var values = ['entity_name', 'event_product_name', 'activity_sector', 'year', 
 			'type_footprint', 'city', 'country', 'total_emissions', 
 			'ratio_day_event', 'footprint_id', 'entity_id', 'entity_name_alias', 'lat', 'lng', 
 			'duration_days_event', 'verified', 'ratio_functional_unit', 'characteristic_unit_entity',
 			'unit_measure', 'scope_study', 'scope_3_categories_including', 'event_type'
 		];
-		tx.executeSql('SELECT ' + addComma(values) + ' FROM HUELLA WHERE ' + publicFields['footprint_id'] + '=?', [idhuella], querySuccess, errorCB);
+		var sql = 'SELECT ' + addComma(values) + ' FROM ' + table + ' WHERE ' + introFields['footprint_id'] + '=?';
+		var sqlValues = [idhuella];
+		if(!no_api){
+			tx.executeSql(sql, sqlValues, querySuccess, errorCB);
+		}else{
+			sql = 'SELECT ' + addComma(values) + ' FROM ' + table + ' WHERE ' + noApiWhere + ' and ' + introFields['footprint_id'] + '=?';
+			executeSql(sql, sqlValues, querySuccessNoAPI, errorCB);
+		}
 	}
 	
 	//Se solicita el idhuella máximo
 	function maxFootprintDB(tx, functionName) { // successMaxFootprintDB querySuccess
-		if(!functionName){functionName=querySuccess;}
-		var values = "MAX(" + publicFields['footprint_id'] + ") AS " + publicFields['footprint_id'] + ", " 
-		+ publicFields['entity_name'] + ", COUNT(" + publicFields['footprint_id'] + ") AS total";
-		tx.executeSql('SELECT ' + values + ' FROM HUELLA', [], functionName, errorCB);
+		if(!functionName){
+			if(!no_api){
+				functionName=querySuccess;
+			}else{
+				functionName=querySuccessNoAPI;
+			}			
+		}
+		var values = "MAX(" + introFields['footprint_id'] + ") AS " + publicFields['footprint_id'] + ", " 
+		+ introFields['entity_name'] + ", COUNT(" + introFields['footprint_id'] + ") AS total";
+		var sql = 'SELECT ' + values + ' FROM ' + table;
+		var sqlValues = [];
+		if(!no_api){
+			tx.executeSql(sql, sqlValues, functionName, errorCB);
+		}else{
+			sql = sql + ' WHERE ' + noApiWhere;
+			executeSql(sql, sqlValues, functionName, errorCB);
+		}
 	}
 	
 	//Se solicita el idhuella máximo
 	function topFootprintDB(max, tx) {
 		var values = ['footprint_id', 'entity_name'];
 		values = addComma(values);
-		tx.executeSql('SELECT ' + values + ' FROM HUELLA WHERE ' + publicFields['footprint_id'] + ' > ?', [max], successTopFootprintDB, errorCB);
+		var sql = 'SELECT ' + values + ' FROM ' + table + ' WHERE ' + introFields['footprint_id'] + ' > ?';
+		var sqlValues = [max];
+		tx.executeSql(sql, sqlValues, successTopFootprintDB, errorCB);
 	}
 	
 	//Se solicita un tipo
 	function typeDB(tx, type, data) {
 	
-		var dataWhere = [type];
+		var sqlValues = [type];
 		var whereYear = "";
 		var values = ['entity_name', 'event_product_name', 'activity_sector', 'year', 'type_footprint',
 			'city', 'country', 'total_emissions', 'ratio_day_event', 'footprint_id', 'entity_id', 
@@ -215,28 +251,39 @@ var Database = function (http, q, scope, ionicPopup) {
 		//Se elimina un tipo de evento de la búsqueda
 		function sqlEvents(event, nameEvent){
 			if(data && !data[event]){
-				dataWhere[dataWhere.length] = nameEvent;
-				whereYear = whereYear + " AND " + publicFields['event_type'] + "!=? ";
+				sqlValues[sqlValues.length] = nameEvent;
+				whereYear = whereYear + " AND " + introFields['event_type'] + "!=? ";
 			}
 		}
 			
-		if(data && data.myYear && data.myYear!=''){
-			dataWhere[dataWhere.length] = data.myYear;
-			whereYear = whereYear + " AND " + publicFields['year'] + "=? ";
+		if(data && data.myYear && data.myYear!='' && !isNaN(data.myYear)){
+			sqlValues[sqlValues.length] = data.myYear;
+			whereYear = whereYear + " AND " + introFields['year'] + "=? ";
 		}
 		
 		if(data && data.verified){
-			dataWhere[dataWhere.length] = "s%";
-			whereYear = whereYear + " AND " + publicFields['verified'] + " LIKE ? ";
+			sqlValues[sqlValues.length] = "s%";
+			whereYear = whereYear + " AND " + introFields['verified'] + " LIKE ? ";
 		}
 		
-		sqlEvents("sportEvents", "Eventos deportivos");
-		sqlEvents("congress", "Congresos");
-		sqlEvents("courses", "Entregas de Premios");
-		sqlEvents("awards", "Cursos y jornadas");
-		sqlEvents("culturalEvents", "Eventos culturales");
-		sqlEvents("corporateEvents", "Eventos corporativos");
-		tx.executeSql('SELECT ' + values + ' FROM HUELLA WHERE ' + publicFields['type_footprint'] + '=? ' + whereYear + 'ORDER BY ' + publicFields['city'] + ' DESC, ' + publicFields['country'], dataWhere, querySuccess, errorCB);
+		sqlEvents("sportEvents", "deportivo");
+		sqlEvents("congress", "congresos");
+		sqlEvents("courses", "cursos");
+		sqlEvents("awards", "premios");
+		sqlEvents("culturalEvents", "culturales");
+		sqlEvents("corporateEvents", "corporativos");
+		var sql = 'SELECT ' + values + ' FROM ' + table + ' WHERE ' + introFields['type_footprint'] + '=? ' 
+			+ whereYear + 'ORDER BY ' + introFields['lat'] + ', ' + introFields['lng'] + ', '
+			+ introFields['city'] + ' DESC, ' + introFields['country'];
+		if(!no_api){	
+			tx.executeSql(sql, sqlValues, querySuccess, errorCB);
+		}else{
+			sql = 'SELECT ' + values + ' FROM ' + table + ' WHERE ' 
+				+ noApiWhere + ' and ' + introFields['type_footprint'] + '=? ' 
+				+ whereYear + 'ORDER BY ' + introFields['lat'] + ', ' + introFields['lng'] + ', '
+				+ introFields['city'] + ' DESC, ' + introFields['country'];
+			executeSql(sql, sqlValues, querySuccessNoAPI, errorCB);
+		}
 	}
 	
 	//Añade un parámetro a la búsqueda
@@ -262,16 +309,15 @@ var Database = function (http, q, scope, ionicPopup) {
 				where = where + " lower(" + nameDB + ") REGEXP ? ";
 			}else{
 				where = where + " " + nameDB + " LIKE ? ";
-			}
-			
+			}			
 			dataWhere[dataWhere.length] = parameter[nameParameter];
 		}
 		return where;
 	}
 	
 	//Se solicitan todos los datos que cumplen las condiciones de búsqueda
-	function allDB(parameter, tx) {
-		var dataWhere = [];
+	function allDB(tx, parameter) {
+		var sqlValues = [];
 		var values = ['entity_name', 'event_product_name', 'activity_sector', 'year', 'type_footprint',
 			'city', 'country', 'total_emissions', 'ratio_day_event', 'footprint_id', 'entity_id',
 			'entity_name_alias', 'lat', 'lng'
@@ -279,43 +325,86 @@ var Database = function (http, q, scope, ionicPopup) {
 		values = addComma(values);	
 		var where = "";	
 		
-		where = where + addParameterWhere(parameter, dataWhere, 'year', publicFields['year']);
-		where = where + addParameterWhere(parameter, dataWhere, 'city', publicFields['city']);
-		where = where + addParameterWhere(parameter, dataWhere, 'type',  publicFields['type_footprint']);
-		where = where + addParameterWhere(parameter, dataWhere, 'activity',  publicFields['activity_sector']);
-		where = where + addParameterWhere(parameter, dataWhere, 'entity',  publicFields['entity_name'], '.*');
-		where = where + addParameterWhere(parameter, dataWhere, 'product',  publicFields['event_product_name'], '.*');
+		where = where + addParameterWhere(parameter, sqlValues, 'year', introFields['year']);
+		where = where + addParameterWhere(parameter, sqlValues, 'city', introFields['city']);
+		where = where + addParameterWhere(parameter, sqlValues, 'type',  introFields['type_footprint']);
+		where = where + addParameterWhere(parameter, sqlValues, 'activity',  introFields['activity_sector']);
+		where = where + addParameterWhere(parameter, sqlValues, 'entity',  introFields['entity_name'], '.*');
+		where = where + addParameterWhere(parameter, sqlValues, 'product',  introFields['event_product_name'], '.*');
 		
-		if(dataWhere.length){
+		if(sqlValues.length){
 			where = " WHERE " + where;
+		}			
+		  
+		var whereEnd = " ORDER BY (TRIM(COALESCE("+ introFields['event_product_name'] 
+			  + ',"")) || "" ||  TRIM(' + introFields['entity_name'] + ")), TRIM(" + introFields['year'] + ")";		
+			  
+		var sql = 'SELECT ' + values + ' FROM ' + table + ' ' + where + whereEnd;
+
+		if(!no_api){
+			tx.executeSql(sql, sqlValues, querySuccess, errorCB);
+		}else{
+			whereEnd = " ORDER BY concat(TRIM(COALESCE("+ introFields['event_product_name'] 
+			  + ',"")), TRIM(' + introFields['entity_name'] + ")), TRIM(" + introFields['year'] + ")";	
+			if(sqlValues.length){
+				where = where + ' AND ' + noApiWhere;
+			}else{
+				where = where + ' WHERE ' + noApiWhere;
+			}
+			sql = 'SELECT ' + values + ' FROM ' + table + ' ' + where + whereEnd;
+			executeSql(sql, sqlValues, querySuccessNoAPI, errorCB);
 		}
-		where = where + " ORDER BY "+ publicFields['footprint_id'];
-		tx.executeSql('SELECT ' + values + ' FROM HUELLA ' + where, dataWhere,querySuccess, errorCB);
 	}
 	
 	//Se solicitan los registros ordenados por huellas de carbono
 	function orderedListDB(tx, parameter, type) {
-		var dataWhere = [];	
+		var sqlValues = [];	
 
-		var values = parameter + " AS name, count(" + publicFields['footprint_id'] + ") AS total";
-		var where = "WHERE ";
+		var values = introFields[parameter] + " AS name, count(" + introFields['footprint_id'] + ") AS total";
+		var where = "";
 		if(type){
-			where = where + ' ' + publicFields['type_footprint'] + '  = ' + '?' + " AND ";
-			dataWhere[dataWhere.length] = type;
+			where = where + ' ' + introFields['type_footprint'] + '  = ' + '?' + " AND ";
+			sqlValues[sqlValues.length] = type;
 		}
-		where = where + parameter + " != '' GROUP BY " + parameter + " ORDER BY total DESC";
-		tx.executeSql('SELECT ' + values + ' FROM HUELLA ' + where, dataWhere, querySuccess, errorCB);	
-
+		where = where + introFields[parameter] + " != '' GROUP BY " + introFields[parameter] + " ORDER BY total DESC";
+		var sql = 'SELECT ' + values + ' FROM ' + table + ' WHERE ' + where;
+		if(!no_api){
+			tx.executeSql(sql, sqlValues, querySuccess, errorCB);	
+		}else{
+			sql = 'SELECT ' + values + ' FROM ' + table + ' WHERE ' + noApiWhere + ' and ' + where;
+			executeSql(sql, sqlValues, querySuccessNoAPI, errorCB);
+		}
 	}
 	
 	//Se solicitan un listado de todos los parámetros de un tipo
-	function listingDB(type, tx) {
-		var values = type + " AS value";
-		var where = "GROUP BY " + "lower( " + type + " ) " + " ORDER BY " + type;
+	function listingDB(tx, type, condition, value) {
+		var sqlValues = [];
+		
+		var values = introFields[type] + " AS value";
+		
+		var cond = " ";
+		if(condition && value){
+			cond = " WHERE " + introFields[condition] + " = ? " 
+			sqlValues[sqlValues.length] = value;
+		}
+		
+		var where = "GROUP BY " + "lower( " + introFields[type] + " ) " + " ORDER BY " + introFields[type];
 		if(type == publicFields['year']){
 			where = where + " DESC";
 		}
-		tx.executeSql('SELECT ' + values + ' FROM HUELLA ' + where, [], querySuccess, errorCB);
+		var sql = 'SELECT ' + values + ' FROM ' + table + '  ' + cond + ' ' + where;
+		
+		if(!no_api){
+			tx.executeSql(sql, sqlValues, querySuccess, errorCB);
+		}else{
+			if(cond == " "){
+				cond = ' WHERE ' + noApiWhere;
+			}else{
+				cond = cond + ' and ' + noApiWhere;
+			}
+			sql = 'SELECT ' + values + ' FROM ' + table + '  ' + cond + ' ' + where;
+			executeSql(sql, sqlValues, querySuccessNoAPI, errorCB);
+		}
 	}
 	
 	//Mostramos un mensaje de error por el fallo producido
@@ -430,4 +519,50 @@ var Database = function (http, q, scope, ionicPopup) {
 		}
 		deferred.resolve(list);
 	}
+	
+	//Se forma una cadena con los campos recibidos separados por comas
+	function addComma(fields){	
+		var phrase = "";
+		for (f in fields) {
+			if (phrase!=""){
+				phrase = phrase + ", ";
+			}
+			phrase = phrase + introFields[fields[f]];
+
+			if(no_api){
+				phrase = phrase + " as " + publicFields[fields[f]];				
+			}
+			
+		}
+		
+		return phrase;
+	}
+	
+	//******* CONEXIÓN DIRECTA DB *******//
+	
+	//Campo que hay que añadir a las búsquedas contra BD de Carbonpedia: "h.Estado=1" 
+	
+	//Preparar los datos que se pasaran al PHP que enlaza con MySQL
+	function encodeSqlValues(sql, sqlValues) {		
+		var parameters = {};
+		parameters['query']=sql; //utf8_encode encodeURI
+		for (v in sqlValues) {
+			parameters['value'+ v] = sqlValues[v];
+		}
+		return parameters;
+	}
+
+	//Hacer llamada post al PHP que enlaza con MySQL
+	function executeSql(sql, sqlValues, querySuccess, errorCB) {	
+		var api = 'http://www.ecodes.org/carbonpedia/app/extra/database.php?';
+		http.post('http://www.ecodes.org/carbonpedia/app/extra/database.php',
+			 encodeSqlValues(sql, sqlValues)).success(querySuccess).error(errorCB);		
+	}
+	
+	//La consulta fue un éxito y se reciben los datos
+	function querySuccessNoAPI(data, status, headers, config) {
+		// console.log(data);
+		deferred.resolve(data);
+	}
+	
 }

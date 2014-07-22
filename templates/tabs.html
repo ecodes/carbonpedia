@@ -52,29 +52,21 @@
 	</ion-list>
 	
 	<ul class="list" ng-if="url=='map'">
-	  <li class="item item-input item-select">
+	
+	  <li class="item item-input item-{{okSelect}}">
 		<div class="input-label">
 		  Años
 		</div>
-		<select ng-model="form.myYear" ng-options="year for year in select.years" ng-change="changeForm()">
-	  </li>
-	  
-	  <!-- Sin expliación... no se muestra y si se quita desaparecen otros campos -->
-	  <li class="item item-input item-select">
-		<div class="input-label">
-		  Años
-		</div>
-		<select>
-		  <option>Blue</option>
-		  <option selected>Green</option>
-		  <option>Red</option>
+		<select ng-model="form.myYear" ng-options="year for year in select.years" ng-change="changeForm()"
+					ng-focus="functionFocus('years', 'myYear', 'Todos', 'select');"
+					ng-blur="functionBlur('years', 'myYear', 'Todos', 'select');"	
+		>
 		</select>
-	  </li>
+	  </li>	  
 	  
 		<div class="item item-divider">
 			Verificada
-		</div>
-		
+		</div>		
 	<ion-toggle ng-model="form.verified" toggle-class="toggle-balanced" ng-change="changeForm()">
 		Verificada
 	</ion-toggle>

@@ -3,10 +3,13 @@
 		<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
 	</ion-nav-buttons>
   <ion-content class="has-header">
-	<h4 class="title_graphic">Distribución por sectores de las huellas de carbono</h4>
+
+	<h4>Huella de carbono de producto; </h4> <br/>
+	<h4>¿Qué sectores están más representados en Carbonpedia?</h4>
 	<div id="chart_sector"></div>
   	<p class="text_graphic" data-ng-repeat="i in [] | range: sector.length">
 		<i class="icon ion-stop" style="color : {{chartColors[i].color}};"></i> {{sector[i][0]}}
  	</p>
+	<br/>
   </ion-content>
 </ion-view>
