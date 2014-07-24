@@ -195,7 +195,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     })
 	
     .state('tab.select-list_map', {
-      url: '/select-list/:variable/:form/:text',
+      url: '/select-list_map/:variable/:form/:text',
       views: {
         'tab-map': {
           templateUrl: 'templates/tab-select-list.html',

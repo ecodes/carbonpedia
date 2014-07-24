@@ -221,7 +221,7 @@ angular.module('starter.controllers', [])
 	//Cambiamos '' por 'Todos' en el select, si procede
 	$scope.functionFocus = function(names, name, text){
 		if(oldVersion(window)){
-			functionOldFocus($state, 'formSearch', name, text);
+			functionOldFocus($state, 'formSearch', name, text, "tab.select-list");
 		}else{
 			functionFocus($scope, null, names, $rootScope, 'formSearch', name, text);
 		}
@@ -450,7 +450,7 @@ angular.module('starter.controllers', [])
 	//Cambiamos '' por 'Todos' en el select, si procede
 	$rootScope.functionFocus = function(names, name, text, preNames){	
 		if(oldVersion(window)){
-			functionOldFocus($state, 'form', name, text);
+			functionOldFocus($state, 'form', name, text, 'tab.select-list_map');
 		}else{
 			functionFocus($rootScope, preNames, names, $rootScope, 'form', name, text);
 		}

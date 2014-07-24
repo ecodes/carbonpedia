@@ -34,8 +34,8 @@ function functionFocus(scopeNames, preNames, names, scopeName, preName, name, te
 }
 
 //Lanza una pantalla con un desplegable que actualizará el select con el focus
-function functionOldFocus(state, form, name, text){	
-	state.transitionTo("tab.select-list",
+function functionOldFocus(state, form, name, text, tab){	
+	state.transitionTo(tab,
 		{ "variable": encodeURIComponent(name), 
 		"form": encodeURIComponent(form), 
 		"text": encodeURIComponent(text)});	

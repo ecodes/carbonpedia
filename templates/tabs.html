@@ -25,7 +25,7 @@
 	  </ion-tab>		  
 	</ion-tabs>
   </ion-pane>
-
+	  
   <ion-side-menu side="left"  is-enabled="tab!='list'">
     <header class="bar bar-header bar-stable">
       <h1 class="title" ng-if="tab=='main'">Menú</h1>
@@ -33,23 +33,13 @@
     </header>
     <ion-content class="has-header">
 	
-	<ion-list ng-if="tab=='main'">
-		<ion-item nav-clear menu-close href="#/tab/main">
-		  Principal
-		</ion-item>
-		<ion-item nav-clear menu-close href="#/tab/carbonpedia">
-		  Carbonpedia
-		</ion-item>
-		<ion-item nav-clear menu-close href="#/tab/product">
-		  Producto
-		</ion-item>
-		<ion-item nav-clear menu-close href="#/tab/event">
-		  Evento
-		</ion-item>
-		<ion-item nav-clear menu-close href="#/tab/entity">
-		  Entidad
-		</ion-item>
-	</ion-list>
+	<ul class="list" ng-if="tab=='main'">
+		<a href="#/tab/main" class="item" menu-close>Principal</a>
+		<a href="#/tab/carbonpedia" class="item" menu-close>Carbonpedia</a>
+		<a href="#/tab/product" class="item" menu-close>Producto</a>
+		<a href="#/tab/event" class="item" menu-close>Evento</a>
+		<a href="#/tab/entity" class="item" menu-close>Entidad</a>
+	</ul>
 	
 	<ul class="list" ng-if="url=='map'">
 	
