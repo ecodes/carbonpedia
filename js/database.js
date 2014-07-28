@@ -294,19 +294,21 @@ var Database = function (http, q, scope, ionicPopup) {
 			if(addText){
 				//Procesamos las cadenas de texto para no tener en cuenta mayusculas o minusculas o tildes
 				parameter[nameParameter] = parameter[nameParameter].toLowerCase();
-				parameter[nameParameter] = parameter[nameParameter].replace(/^\s+/,'').replace(/\s+$/,'');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[o]/gi,'\xF2');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[\xF2\xF3\xF6]/gi,'[o\xF2\xF3\xF6]');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[e]/gi,'\xE8');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[\xE8\xE9\xEB]/gi,'[e\xE8\xE9\xEB]');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[u]/gi,'\xF9');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[\xF9\xFA\xFC]/gi,'[u\xF9\xFA\xFC]');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[a]/gi,'\xE0');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[\xE0\xE1\xE4]/gi,'[a\xE0\xE1\xE4]');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[i]/gi,'\xEC');
-				parameter[nameParameter] = parameter[nameParameter].replace(/[\xEC\xED\xEF]/gi,'[i\xEC\xED\xEF]');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/^\s+/,'').replace(/\s+$/,'');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[o]/gi,'\xF2');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[\xF2\xF3\xF6]/gi,'[o\xF2\xF3\xF6]');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[e]/gi,'\xE8');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[\xE8\xE9\xEB]/gi,'[e\xE8\xE9\xEB]');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[u]/gi,'\xF9');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[\xF9\xFA\xFC]/gi,'[u\xF9\xFA\xFC]');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[a]/gi,'\xE0');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[\xE0\xE1\xE4]/gi,'[a\xE0\xE1\xE4]');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[i]/gi,'\xEC');
+				// parameter[nameParameter] = parameter[nameParameter].replace(/[\xEC\xED\xEF]/gi,'[i\xEC\xED\xEF]');
+				addText='%';
 				parameter[nameParameter] = addText + parameter[nameParameter] + addText;
-				where = where + " lower(" + nameDB + ") REGEXP ? ";
+				// where = where + " lower(" + nameDB + ") REGEXP ? ";
+				where = where + " lower(" + nameDB + ") LIKE ? ";
 			}else{
 				where = where + " " + nameDB + " LIKE ? ";
 			}			
