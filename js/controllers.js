@@ -254,17 +254,17 @@ angular.module('starter.controllers', [])
 	function dataSelect(names, name, nameDB){
 		List.listing(nameDB).then(function(results) {
 			$scope[names]=[];
+			f=0;
 			for (i=0;i<results.length;i++){
-				$scope[names][i] = results[i].value;
-			}
-			//Añadimo un primer valor vacío si no existe
-			if( $scope[names][0]!='' ){
-				$scope[names].unshift('');
-			}else{ //Eliminamos exceso de campos nulos
-				while( $scope[names][1]=='' ){
-					$scope[names].shift();
+				if(results[i].value != null && results[i].value != ''){
+					$scope[names][f] = results[i].value;
+					f=f+1;
 				}
 			}
+			
+			//Añadimo un primer valor vacío
+			$scope[names].unshift('');
+			
 			//Cargamos el valor seleccionado previamente, si existe
 			if( !$rootScope.formSearch || !$rootScope.formSearch[name] ){
 				$rootScope.formSearch[name] = $scope[names][0];
@@ -281,7 +281,7 @@ angular.module('starter.controllers', [])
 		if(!$rootScope.formSearch[name] || $rootScope.formSearch[name]=='Todos' || $rootScope.formSearch[name]=='Todas'){
 			$rootScope.formSearch[name] = '';
 		}
-	}	
+	}
 
 	//Cargar datos en el formulario
 	loadForm();

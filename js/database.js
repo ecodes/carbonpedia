@@ -563,7 +563,6 @@ var Database = function (http, q, scope, ionicPopup) {
 	
 	//La consulta fue un éxito y se reciben los datos
 	function querySuccessNoAPI(data, status, headers, config) {
-		// console.log(data);
 		deferred.resolve(data);
 	}
 	

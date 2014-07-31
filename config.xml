@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="es.ecodes.carbonpedia.app" version="0.0.4" xmlns="http://www.w3.org/ns/widgets" 
+<widget id="es.ecodes.carbonpedia.app" version="0.0.5" xmlns="http://www.w3.org/ns/widgets" 
 	xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0" 
 >
 	<!-- xmlns:android="http://schemas.android.com/apk/res/android" -->
@@ -54,51 +54,51 @@
 	<gap:plugin name="org.apache.cordova.inappbrowser" />
 	<!-- <access origin="*" browserOnly="true"/> --> 
 	 
-	<icon src="www/img/res/drawable/icon_carbonpedia.png" />
-	<icon src="www/img/res/drawable-ldpi/icon_carbonpedia.png" gap:platform="android" gap:density="ldpi" />
-	<icon src="www/img/res/drawable-mdpi/icon_carbonpedia.png" gap:platform="android" gap:density="mdpi" />
-	<icon src="www/img/res/drawable-hdpi/icon_carbonpedia.png" gap:platform="android" gap:density="hdpi" />
-	<icon src="www/img/res/drawable-xhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xhdpi" />
-	<icon src="www/img/res/drawable-xxhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xxhdpi" />
+	<icon src="img/res/drawable/icon_carbonpedia.png" />
+	<icon src="img/res/drawable-ldpi/icon_carbonpedia.png" gap:platform="android" gap:density="ldpi" />
+	<icon src="img/res/drawable-mdpi/icon_carbonpedia.png" gap:platform="android" gap:density="mdpi" />
+	<icon src="img/res/drawable-hdpi/icon_carbonpedia.png" gap:platform="android" gap:density="hdpi" />
+	<icon src="img/res/drawable-xhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xhdpi" />
+	<icon src="img/res/drawable-xxhdpi/icon_carbonpedia.png" gap:platform="android" gap:density="xxhdpi" />
 
-	<gap:splash src="www/img/res/drawable/splashimage.9.png" /> 
-	<!-- <gap:splash src="www/img/res/drawable/splashimage.9.png" gap:platform="android" /> -->
-	<gap:splash src="www/img/res/drawable-ldpi/splashimage.9.png" gap:platform="android" gap:density="ldpi" />
-	<gap:splash src="www/img/res/drawable-mdpi/splashimage.9.png" gap:platform="android" gap:density="mdpi" />
-	<gap:splash src="www/img/res/drawable-hdpi/splashimage.9.png" gap:platform="android" gap:density="hdpi" />
-	<gap:splash src="www/img/res/drawable-xhdpi/splashimage.9.png" gap:platform="android" gap:density="xhdpi" />
-	<gap:splash src="www/img/res/drawable-xxhdpi/splashimage.9.png" gap:platform="android" gap:density="xxhdpi" />
+	<gap:splash src="img/res/drawable/splashimage.9.png" /> 
+	<!-- <gap:splash src="img/res/drawable/splashimage.9.png" gap:platform="android" /> -->
+	<gap:splash src="img/res/drawable-ldpi/splashimage.9.png" gap:platform="android" gap:density="ldpi" />
+	<gap:splash src="img/res/drawable-mdpi/splashimage.9.png" gap:platform="android" gap:density="mdpi" />
+	<gap:splash src="img/res/drawable-hdpi/splashimage.9.png" gap:platform="android" gap:density="hdpi" />
+	<gap:splash src="img/res/drawable-xhdpi/splashimage.9.png" gap:platform="android" gap:density="xhdpi" />
+	<gap:splash src="img/res/drawable-xxhdpi/splashimage.9.png" gap:platform="android" gap:density="xxhdpi" />
 
 	<!-- iPhone and iPod touch -->
-	<gap:splash src="www/img/iphone_splash/Default~iphone.png" gap:platform="ios" width="320" height="480" />
-	<gap:splash src="www/img/iphone_splash/Default@2x~iphone.png" gap:platform="ios" width="640" height="960" />
+	<gap:splash src="img/iphone_splash/Default~iphone.png" gap:platform="ios" width="320" height="480" />
+	<gap:splash src="img/iphone_splash/Default@2x~iphone.png" gap:platform="ios" width="640" height="960" />
 
 	<!-- iPhone 5 / iPod Touch (5th Generation) -->
-	<gap:splash src="www/img/iphone_splash/Default-568h@2x~iphone.png" gap:platform="ios" width="640" height="1136" />
+	<gap:splash src="img/iphone_splash/Default-568h@2x~iphone.png" gap:platform="ios" width="640" height="1136" />
 
 	<!-- iPad -->
-	<gap:splash src="www/img/iphone_splash/Default-Portrait~ipad.png" gap:platform="ios" width="768" height="1024" />
-	<gap:splash src="www/img/iphone_splash/Default-Landscape~ipad.png" gap:platform="ios" width="1024" height="768" />
+	<gap:splash src="img/iphone_splash/Default-Portrait~ipad.png" gap:platform="ios" width="768" height="1024" />
+	<gap:splash src="img/iphone_splash/Default-Landscape~ipad.png" gap:platform="ios" width="1024" height="768" />
 
 	<!-- Retina iPad -->
-	<gap:splash src="www/img/iphone_splash/Default-Portrait@2x~ipad.png" gap:platform="ios" width="1536" height="2048" />
-	<gap:splash src="www/img/iphone_splash/Default-Landscape@2x~ipad.png" gap:platform="ios" width="2048" height="1536" />
+	<gap:splash src="img/iphone_splash/Default-Portrait@2x~ipad.png" gap:platform="ios" width="1536" height="2048" />
+	<gap:splash src="img/iphone_splash/Default-Landscape@2x~ipad.png" gap:platform="ios" width="2048" height="1536" />
 
 	<!-- iPhone / iPod Touch  -->
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="60" height="60" />
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="120" height="120" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="60" height="60" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="120" height="120" />
 
 	<!-- iPad -->
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="76" height="76" />
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="152" height="152" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="76" height="76" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="152" height="152" />
 
 	<!-- Settings Icon -->
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="29" height="29" />
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="58" height="58" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="29" height="29" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="58" height="58" />
 
 	<!-- Spotlight Icon -->
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="40" height="40" />
-	<icon src="www/img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="80" height="80" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="40" height="40" />
+	<icon src="img/iphone_icon/icon_carbonpedia.png" gap:platform="ios" width="80" height="80" />
 
     <!-- to enable individual permissions use the following examples -->
     <feature name="http://api.phonegap.com/1.0/geolocation"/>
