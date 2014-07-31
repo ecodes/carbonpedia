@@ -17,7 +17,7 @@
 		<div class="item item-text-wrap" ng-if="!detail[fields['scope_3_categories_including']] && detail.isEntity"><b>Categorias incluidas de alcance 3:</b> Ninguna</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['city']] && detail.isEvent"><b>Localidad donde tiene lugar el evento:</b> {{detail[fields['city']] | mayus}}</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['country']] && detail.isEvent"><b>País:</b> {{detail[fields['country']] | mayus}}</div>	
-		<div class="item item-text-wrap" ng-if="detail[fields['duration_days_event']] && detail.isEvent"><b>Duracion del evento:</b> {{detail[fields['duration_days_event']]}} días</div>
+		<div class="item item-text-wrap" ng-if="detail[fields['duration_days_event']] && detail.isEvent"><b>Duración del evento:</b> {{detail[fields['duration_days_event']]}} días</div>
 		<div class="item item-text-wrap" ng-if="detail[fields['ratio_functional_unit']] && detail.isProduct"><b>Emisiones por unidad funcional:</b> {{detail[fields['ratio_functional_unit']]}}  {{detail[fields['unit_measure']]}}/{{detail[fields['characteristic_unit_entity']]}} </div>
 		<div class="item item-text-wrap" ng-if="detail[fields['total_emissions']] && (detail.isEntity || detail.isEvent)"><b>Emisiones totales:</b> {{detail[fields['total_emissions']]}} {{detail[fields['unit_measure']]}} </div>
 		<div class="item item-text-wrap" ng-if="detail[fields['verified']]!=''"><b>Verificado:</b> {{detail[fields['verified']] | mayus}}</div>
